@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module type="plugin" name="persons">
+    <title>Persons</title>
+    <summary>Easy way to create and handle persons here!</summary>
+    <author>Intelliants LLC</author>
+    <contributor>Intelliants LLC</contributor>
+    <version>1.0.1</version>
+    <date>2017-02-14</date>
+    <compatibility>4.1.0</compatibility>
+
+    <screenshots>
+        <screenshot type="preview" name="preview.jpg">View Listing page</screenshot>
+    </screenshots>
+
+    <items>
+        <item>person</item>
+    </items>
+
+    <actions>
+        <action name="persons" url="persons/persons/" icon="list" pages="persons:add,persons:edit"><![CDATA[]]></action>
+        <action name="add_person" url="persons/persons/add/" icon="plus" pages="persons:read,persons:edit"><![CDATA[]]></action>
+    </actions>
+
+    <adminpages>
+        <page group="content" name="persons" url="persons/persons/" menus="menu">Persons</page>
+    </adminpages>
+
+    <pages>
+        <page url="persons/" name="persons" menus="main">Persons</page>
+    </pages>
+
+    <fields_groups>
+        <group item="person" name="general" title="General"><![CDATA[]]></group>
+    </fields_groups>
+
+    <fields>
+        <field name="fullname" item="person" type="text" group="general" length="70" required="1" multilingual="1" adminonly="1">Full Name</field>
+        <field name="gender" item="person" type="combo" group="general" values="Male||Male,Female||Female" required="1" adminonly="1">Gender</field>
+        <field name="description" item="person" type="textarea" group="general" editor="1" required="0" multilingual="1" adminonly="1">Description</field>
+    </fields>
+
+    <phrases>
+        <phrase category="admin" key="add_person">Add Person</phrase>
+        <phrase category="admin" key="gender">Gender</phrase>
+        <phrase category="common" key="persons">Persons</phrase>
+        <phrase category="common" key="no_persons">No persons.</phrase>
+        <phrase category="common" key="config_group_persons">Config Person List Limit</phrase>
+    </phrases>
+
+    <hooks>
+        <hook name="phpCoreBeforePageDisplay" filename="hook.featured-persons.php" page_type="front"><![CDATA[]]></hook>
+    </hooks>
+
+    <blocks>
+        <block title="Featured Persons" name="featuredpersons" position="right" sticky="1" pages="index" forder="1" type="smarty" filename="featured.persons.tpl"><![CDATA[]]></block>
+    </blocks>
+
+    <configgroup name="persons">Persons</configgroup>
+
+    <config group="persons" name="persons_number_entry" type="text" description="Number of displayed persons in Persons entries">4</config>
+
+    <install>
+        <sql>
+            <![CDATA[
+CREATE TABLE IF NOT EXISTS `{prefix}persons`(
+    `id` int(8) unsigned NOT NULL auto_increment,
+    `date_added` date,
+    `date_modified` date,
+    `status` enum('active', 'inactive') NOT NULL default 'inactive',
+    `order` mediumint(8) NOT NULL default 0,
+    `views_num` mediumint(8) unsigned NOT NULL default 0,
+    `featured` tinyint(1) unsigned NOT NULL default 0,
+    `featured_start` datetime NULL,
+    `featured_end` datetime NULL,
+    PRIMARY KEY (`id`),
+    KEY `STATUS` (`status`),
+    KEY `ORDER` (`order`)
+) {mysql_version};
+            ]]>
+        </sql>
+    </install>
+
+    <uninstall>
+        <sql>
+            <![CDATA[
+DROP TABLE IF EXISTS `{prefix}persons`;
+            ]]>
+        </sql>
+    </uninstall>
+</module>
